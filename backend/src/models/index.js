@@ -25,16 +25,16 @@ const sequelize = new Sequelize(
   }
 );
 
-// Importar modelos
+// Objeto para armazenar os modelos
 const db = {};
 
-// TODO: Importar modelos aqui conforme forem criados
-// const User = require('./User')(sequelize);
-// const Employee = require('./Employee')(sequelize);
-// ...
-
-// db.User = User;
-// db.Employee = Employee;
+// Importar todos os modelos
+db.User = require('./User')(sequelize);
+db.Employee = require('./Employee')(sequelize);
+db.WorkSchedule = require('./WorkSchedule')(sequelize);
+db.WorkLocation = require('./WorkLocation')(sequelize);
+db.TimeRecord = require('./TimeRecord')(sequelize);
+db.Holiday = require('./Holiday')(sequelize);
 
 // Configurar associações (relacionamentos)
 Object.keys(db).forEach((modelName) => {
