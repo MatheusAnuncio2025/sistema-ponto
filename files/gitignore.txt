@@ -1,0 +1,127 @@
+# Sistema de Ponto - .gitignore
+
+# ===========================
+# Node.js
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ===========================
+# Variáveis de Ambiente
+# ===========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===========================
+# Builds
+# ===========================
+build/
+dist/
+*.tgz
+
+# ===========================
+# Logs
+# ===========================
+logs/
+*.log
+
+# ===========================
+# IDEs
+# ===========================
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===========================
+# Sistema Operacional
+# ===========================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===========================
+# Testes
+# ===========================
+coverage/
+*.lcov
+.nyc_output/
+
+# ===========================
+# Diversos
+# ===========================
+.cache/
+.temp/
+.tmp/
+*.swp
+*.swo
+*~
+
+# ===========================
+# Docker (volumes locais)
+# ===========================
+postgres-data/
+redis-data/
+
+# ===========================
+# Uploads (temporários)
+# ===========================
+uploads/temp/
+uploads/cache/
+
+# ===========================
+# Certificados SSL (desenvolvimento)
+# ===========================
+*.pem
+*.key
+*.crt
+
+# ===========================
+# Backup de Banco de Dados
+# ===========================
+*.sql.backup
+*.dump
+
+# ===========================
+# Arquivos específicos do projeto
+# ===========================
+# Logs de desenvolvimento
+dev-logs/
+
+# Arquivos de teste
+test-uploads/

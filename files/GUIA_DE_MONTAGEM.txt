@@ -1,0 +1,196 @@
+GUIA DE MONTAGEM DO PROJETO
+============================
+
+Como você baixou os arquivos separadamente, aqui está o passo a passo 
+para montar o projeto corretamente:
+
+
+PASSO 1: CRIAR A ESTRUTURA DE PASTAS
+=====================================
+
+No terminal (Mac) ou PowerShell (Windows), execute:
+
+# Criar pasta principal
+mkdir sistema-ponto
+cd sistema-ponto
+
+# Criar estrutura de documentação
+mkdir -p docs/api
+mkdir -p docs/user-manual
+mkdir -p docs/admin-manual
+
+# Criar estrutura do backend
+mkdir -p backend/src/config
+mkdir -p backend/src/controllers
+mkdir -p backend/src/models
+mkdir -p backend/src/routes
+mkdir -p backend/src/middlewares
+mkdir -p backend/src/services
+mkdir -p backend/src/utils
+mkdir -p backend/src/jobs
+mkdir -p backend/migrations
+mkdir -p backend/seeders
+mkdir -p backend/tests
+
+# Criar estrutura do frontend
+mkdir -p frontend/src/components
+mkdir -p frontend/src/pages
+mkdir -p frontend/src/contexts
+mkdir -p frontend/src/services
+mkdir -p frontend/src/utils
+mkdir -p frontend/src/types
+mkdir -p frontend/src/styles
+mkdir -p frontend/public
+
+
+PASSO 2: COLOCAR OS ARQUIVOS NAS PASTAS CORRETAS
+=================================================
+
+Coloque cada arquivo baixado na pasta correspondente:
+
+RAIZ DO PROJETO (sistema-ponto/)
+└── README.md
+└── INICIO-RAPIDO.md
+└── STATUS-PROJETO.md
+└── .gitignore (arquivo: gitignore.txt - remover .txt)
+└── docker-compose.yml
+└── init-git.sh (só funciona no Mac/Linux)
+
+DOCS (sistema-ponto/docs/)
+└── DOCUMENTACAO_PROJETO_PONTO.md
+└── CHECKLIST_DESENVOLVIMENTO.md
+
+BACKEND (sistema-ponto/backend/)
+└── package.json (arquivo: backend-package.json)
+└── .env.example (arquivo: backend-env-example.txt - remover .txt)
+└── Dockerfile (arquivo: backend-Dockerfile.txt - remover .txt)
+
+BACKEND/SRC (sistema-ponto/backend/src/)
+└── app.js (arquivo: backend-app.js)
+└── server.js (arquivo: backend-server.js)
+
+BACKEND/SRC/CONFIG (sistema-ponto/backend/src/config/)
+└── database.js (arquivo: backend-config-database.js)
+
+BACKEND/SRC/MODELS (sistema-ponto/backend/src/models/)
+└── index.js (arquivo: backend-models-index.js)
+
+FRONTEND (sistema-ponto/frontend/)
+└── package.json (arquivo: frontend-package.json)
+└── .env.example (arquivo: frontend-env-example.txt - remover .txt)
+└── Dockerfile (arquivo: frontend-Dockerfile.txt - remover .txt)
+└── tsconfig.json (arquivo: frontend-tsconfig.json)
+└── tailwind.config.js (arquivo: frontend-tailwind.config.js)
+
+
+PASSO 3: RENOMEAR ARQUIVOS
+===========================
+
+Alguns arquivos foram salvos com extensões diferentes. Renomeie:
+
+gitignore.txt → .gitignore
+backend-env-example.txt → .env.example (coloque em backend/)
+backend-Dockerfile.txt → Dockerfile (coloque em backend/)
+frontend-env-example.txt → .env.example (coloque em frontend/)
+frontend-Dockerfile.txt → Dockerfile (coloque em frontend/)
+
+
+PASSO 4: VERIFICAR A ESTRUTURA
+===============================
+
+Sua estrutura deve estar assim:
+
+sistema-ponto/
+├── README.md
+├── INICIO-RAPIDO.md
+├── STATUS-PROJETO.md
+├── .gitignore
+├── docker-compose.yml
+├── docs/
+│   ├── DOCUMENTACAO_PROJETO_PONTO.md
+│   └── CHECKLIST_DESENVOLVIMENTO.md
+├── backend/
+│   ├── package.json
+│   ├── .env.example
+│   ├── Dockerfile
+│   └── src/
+│       ├── app.js
+│       ├── server.js
+│       ├── config/
+│       │   └── database.js
+│       └── models/
+│           └── index.js
+└── frontend/
+    ├── package.json
+    ├── .env.example
+    ├── Dockerfile
+    ├── tsconfig.json
+    └── tailwind.config.js
+
+
+PASSO 5: INICIALIZAR GIT
+=========================
+
+# No Mac/Linux:
+cd sistema-ponto
+chmod +x init-git.sh
+./init-git.sh
+
+# No Windows:
+cd sistema-ponto
+git init
+git add .
+git commit -m "Inicial commit: Estrutura base do projeto"
+
+
+PASSO 6: CONECTAR COM GITHUB
+=============================
+
+1. Crie um repositório no GitHub (github.com/new)
+2. NÃO inicialize com README
+3. Copie a URL do repositório
+4. Execute:
+
+git remote add origin [URL_DO_REPOSITORIO]
+git branch -M main
+git push -u origin main
+
+
+PASSO 7: PRÓXIMOS PASSOS
+=========================
+
+Agora que o projeto está estruturado, siga o arquivo INICIO-RAPIDO.md
+para instalar as dependências e rodar o projeto!
+
+
+DÚVIDAS COMUNS
+==============
+
+P: Onde coloco o arquivo "backend-package.json"?
+R: Renomeie para "package.json" e coloque em "backend/"
+
+P: Por que alguns arquivos têm prefixos como "backend-" ou "frontend-"?
+R: Para facilitar a identificação. Remova o prefixo ao colocar na pasta correta.
+
+P: E se eu baixar novamente do GitHub em outra máquina?
+R: Não precisa fazer nada disso! Basta: git clone [URL] e pronto!
+
+P: Preciso do Docker?
+R: Não, mas facilita muito! Você pode rodar sem Docker seguindo o INICIO-RAPIDO.md
+
+
+CHECKLIST DE VERIFICAÇÃO
+=========================
+
+Antes de continuar, confirme:
+☐ Todas as pastas foram criadas
+☐ Todos os arquivos estão nas pastas corretas
+☐ Arquivos .txt foram renomeados (removendo .txt)
+☐ .gitignore está na raiz (sem extensão)
+☐ .env.example está em backend/ e frontend/
+☐ Git foi inicializado
+☐ Repositório foi criado no GitHub
+☐ Código foi enviado para o GitHub (git push)
+
+
+Pronto! Agora você está pronto para desenvolver! 🚀
