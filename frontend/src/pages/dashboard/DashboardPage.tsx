@@ -1,196 +1,308 @@
 // Arquivo: frontend/src/pages/dashboard/DashboardPage.tsx
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import {
+  Box,
+  Button,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import LoginIcon from "@mui/icons-material/Login";
+import LunchDiningIcon from "@mui/icons-material/LunchDining";
+import ReplayIcon from "@mui/icons-material/Replay";
+import LogoutIcon from "@mui/icons-material/Logout";
+import CheckIcon from "@mui/icons-material/Check";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTimeRecord, DayRecord } from "../../contexts/TimeRecordContext";
+
+const PUNCH_CONFIG = [
+  { type: "entrada" as const, label: "Entrada", icon: LoginIcon },
+  { type: "saidaAlmoco" as const, label: "Saída Almoço", icon: LunchDiningIcon },
+  { type: "retornoAlmoco" as const, label: "Retorno Almoço", icon: ReplayIcon },
+  { type: "saida" as const, label: "Saída", icon: LogoutIcon },
+];
+
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
+function calcHours(record: DayRecord | null): { worked: string; interval: string } {
+  if (!record?.entrada || !record?.saida) return { worked: "--:--", interval: "--:--" };
+  const toMin = (t: string) => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+  const totalMin = toMin(record.saida) - toMin(record.entrada);
+  const intervalMin =
+    record.saidaAlmoco && record.retornoAlmoco
+      ? toMin(record.retornoAlmoco) - toMin(record.saidaAlmoco)
+      : 0;
+  const workedMin = totalMin - intervalMin;
+  const fmt = (m: number) =>
+    `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
+  return { worked: fmt(workedMin), interval: fmt(intervalMin) };
+}
 
 const DashboardPage: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const {
+    todayRecord,
+    punch,
+    getNextPunch,
+    currentLocation,
+    locationUpdatedAt,
+    locationLoading,
+    locationError,
+    refreshLocation,
+  } = useTimeRecord();
+  const [now, setNow] = useState(new Date());
+  const [actionError, setActionError] = useState("");
+  const [actionInfo, setActionInfo] = useState("");
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const nextPunch = getNextPunch();
+  const { worked, interval } = calcHours(todayRecord);
+  const firstName = useMemo(() => user?.name.split(" ")[0], [user?.name]);
+
+  const playSuccessTone = () => {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = 880;
+      gain.gain.value = 0.08;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.12);
+      osc.onended = () => ctx.close();
+    } catch {
+      // silêncio se o browser bloquear
+    }
+  };
+
+  const handlePunch = async (type: (typeof PUNCH_CONFIG)[number]["type"]) => {
+    try {
+      setActionError("");
+      setActionInfo("");
+      const resp = await punch(type);
+      playSuccessTone();
+      if (resp.warning) {
+        setActionInfo(resp.warning);
+      }
+      if (resp.record && resp.record.is_within_radius === false) {
+        const radius = resp.workLocation?.radius;
+        const distance = resp.record.distance_meters;
+        const extra =
+          radius && distance
+            ? ` Distância: ${distance}m (raio permitido ${radius}m).`
+            : "";
+        setActionInfo(`⚠️ Fora do perímetro permitido.${extra}`);
+      }
+      if (resp.scheduleOverride) {
+        setActionInfo("⚠️ Registro feito fora do horário permitido (liberação aplicada).");
+      }
+    } catch (err: any) {
+      setActionError(err.message || "Erro ao registrar ponto");
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Sistema de Ponto
-              </h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">
-                  {user?.name}
-                </p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition"
-              >
-                Sair
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <Box sx={{ maxWidth: 860, mx: "auto" }}>
+      <Stack spacing={3}>
+        <Paper
+          sx={{
+            p: 4,
+            textAlign: "center",
+            background:
+              "linear-gradient(135deg, rgba(0,149,48,0.12), rgba(11,93,42,0.04))",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {format(now, "EEEE, dd 'de' MMMM", { locale: ptBR })}
+          </Typography>
+          <Typography variant="h4" fontWeight={600} mt={0.5}>
+            {getGreeting()}, {firstName}
+          </Typography>
+          <Typography
+            variant="h2"
+            fontWeight={300}
+            sx={{ fontVariantNumeric: "tabular-nums" }}
+          >
+            {format(now, "HH:mm:ss")}
+          </Typography>
+        </Paper>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-          <div className="flex items-start">
-            <svg
-              className="w-6 h-6 text-blue-600 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        <Paper sx={{ p: 3 }}>
+          <Typography variant="subtitle1" fontWeight={600} mb={2}>
+            Registrar Ponto
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(4, 1fr)" },
+              gap: 2,
+            }}
+          >
+            {PUNCH_CONFIG.map(({ type, label, icon: Icon }) => {
+              const done = todayRecord?.[type];
+              const isNext = nextPunch === type;
+              return (
+                <Button
+                  key={type}
+                  variant={done ? "outlined" : isNext ? "contained" : "outlined"}
+                  color={done ? "inherit" : "primary"}
+                  onClick={() => handlePunch(type)}
+                  disabled={!!done || !isNext}
+                  sx={{
+                    height: 90,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.5,
+                    background: done
+                      ? "transparent"
+                      : isNext
+                        ? "linear-gradient(135deg, rgba(0,149,48,0.95), rgba(11,93,42,0.95))"
+                        : "transparent",
+                    color: done ? "inherit" : isNext ? "#fff" : "inherit",
+                    borderColor: "rgba(15,23,42,0.12)",
+                    "&:hover": {
+                      background: isNext
+                        ? "linear-gradient(135deg, rgba(0,149,48,1), rgba(11,93,42,1))"
+                        : "rgba(15,23,42,0.03)",
+                    },
+                  }}
+                >
+                  {done ? <CheckIcon /> : <Icon />}
+                  <Typography variant="caption" fontWeight={600}>
+                    {label}
+                  </Typography>
+                  {done && (
+                    <Typography variant="caption" color="text.secondary">
+                      {done}
+                    </Typography>
+                  )}
+                </Button>
+              );
+            })}
+          </Box>
+        </Paper>
+
+        <Paper
+          sx={{
+            p: 3,
+            border: "1px solid rgba(15,23,42,0.06)",
+            background: "linear-gradient(180deg, #ffffff, rgba(0,149,48,0.02))",
+          }}
+        >
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", md: "center" }}
+          >
+            <Box>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Localização atual
+              </Typography>
+              {currentLocation ? (
+                <Typography variant="body2" color="text.secondary">
+                  Lat: {currentLocation.latitude.toFixed(6)} · Lng:{" "}
+                  {currentLocation.longitude.toFixed(6)}
+                </Typography>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  Localização não capturada.
+                </Typography>
+              )}
+              {locationUpdatedAt && (
+                <Typography variant="caption" color="text.secondary">
+                  Atualizado em: {format(locationUpdatedAt, "HH:mm:ss")}
+                </Typography>
+              )}
+              {locationError && (
+                <Typography variant="caption" color="error" display="block">
+                  {locationError}
+                </Typography>
+              )}
+            </Box>
+            <Button
+              variant="outlined"
+              startIcon={<MyLocationIcon />}
+              onClick={() => refreshLocation()}
+              disabled={locationLoading}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <div className="ml-3">
-              <h3 className="text-lg font-medium text-blue-900">
-                Bem-vindo(a), {user?.name}! 🎉
-              </h3>
-              <p className="mt-2 text-sm text-blue-800">
-                Sistema de autenticação funcionando! Em breve teremos aqui o
-                dashboard completo.
-              </p>
-            </div>
-          </div>
-        </div>
+              {locationLoading ? "Atualizando..." : "Atualizar"}
+            </Button>
+          </Stack>
+        </Paper>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Status</p>
-                <p className="text-2xl font-bold text-green-600 mt-2">Ativo</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+          <Paper
+            sx={{
+              p: 3,
+              textAlign: "center",
+              background: "linear-gradient(135deg, rgba(0,149,48,0.1), #ffffff)",
+            }}
+          >
+            <AccessTimeIcon color="action" sx={{ mb: 1 }} />
+            <Typography variant="h5" fontWeight={600}>
+              {worked}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Horas trabalhadas
+            </Typography>
+          </Paper>
+          <Paper
+            sx={{
+              p: 3,
+              textAlign: "center",
+              background: "linear-gradient(135deg, rgba(0,149,48,0.08), #ffffff)",
+            }}
+          >
+            <LunchDiningIcon color="action" sx={{ mb: 1 }} />
+            <Typography variant="h5" fontWeight={600}>
+              {interval}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Intervalo
+            </Typography>
+          </Paper>
+        </Box>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Perfil</p>
-                <p className="text-2xl font-bold text-blue-600 mt-2 capitalize">
-                  {user?.role}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+        {actionError && (
+          <Typography align="center" variant="body2" color="error">
+            {actionError}
+          </Typography>
+        )}
+        {actionInfo && !actionError && (
+          <Typography align="center" variant="body2" color="warning.main">
+            {actionInfo}
+          </Typography>
+        )}
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Em breve</p>
-                <p className="text-2xl font-bold text-gray-900 mt-2">
-                  Dashboard
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-gray-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Próximas Funcionalidades 🚀
-          </h2>
-          <ul className="space-y-3">
-            <li className="flex items-start">
-              <span className="text-blue-600 mr-2">✓</span>
-              <span className="text-gray-700">
-                Sistema de autenticação completo
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-gray-400 mr-2">○</span>
-              <span className="text-gray-600">
-                Registro de ponto com geolocalização
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-gray-400 mr-2">○</span>
-              <span className="text-gray-600">Dashboard com estatísticas</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-gray-400 mr-2">○</span>
-              <span className="text-gray-600">Relatórios e exportações</span>
-            </li>
-          </ul>
-        </div>
-      </main>
-    </div>
+        {!nextPunch && todayRecord?.saida && (
+          <Typography align="center" variant="body2" color="text.secondary">
+            ✅ Todos os registros do dia foram feitos. Bom descanso!
+          </Typography>
+        )}
+      </Stack>
+    </Box>
   );
 };
 

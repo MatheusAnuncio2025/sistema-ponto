@@ -35,6 +35,7 @@ db.WorkSchedule = require('./WorkSchedule')(sequelize);
 db.WorkLocation = require('./WorkLocation')(sequelize);
 db.TimeRecord = require('./TimeRecord')(sequelize);
 db.Holiday = require('./Holiday')(sequelize);
+db.SystemSetting = require('./SystemSetting')(sequelize);
 
 // Configurar associações (relacionamentos)
 Object.keys(db).forEach((modelName) => {

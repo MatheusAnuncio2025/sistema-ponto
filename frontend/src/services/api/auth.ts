@@ -22,7 +22,7 @@ export interface AuthResponse {
     id: string;
     name: string;
     email: string;
-    role: "admin" | "manager" | "employee";
+    role: "admin" | "hr" | "supervisor" | "coordinator" | "manager" | "employee";
   };
 }
 
@@ -30,7 +30,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "admin" | "manager" | "employee";
+  role: "admin" | "hr" | "supervisor" | "coordinator" | "manager" | "employee";
 }
 
 // Criar instância do axios

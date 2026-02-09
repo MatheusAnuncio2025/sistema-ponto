@@ -51,6 +51,31 @@ module.exports = (sequelize) => {
       },
       onDelete: 'SET NULL',
     },
+    lunch_start: {
+      type: DataTypes.TIME,
+      allowNull: true,
+      comment: 'Horário de saída para almoço (override por funcionário)',
+    },
+    lunch_end: {
+      type: DataTypes.TIME,
+      allowNull: true,
+      comment: 'Horário de retorno do almoço (override por funcionário)',
+    },
+    punch_override_until: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: 'Permite bater ponto fora da janela até esta data/hora',
+    },
+    punch_override_by: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      comment: 'Usuário que liberou o ponto fora da janela',
+    },
+    punch_override_reason: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'Motivo da liberação para ponto fora da janela',
+    },
     is_hybrid: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

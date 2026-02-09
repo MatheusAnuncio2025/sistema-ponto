@@ -72,6 +72,25 @@ module.exports = (sequelize) => {
       },
       comment: 'Quem aprovou o ajuste',
     },
+    is_schedule_override: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      comment: 'Marcação feita fora da janela de horário com liberação',
+    },
+    schedule_override_by: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
+      comment: 'Usuário que liberou a marcação fora da janela',
+    },
+    schedule_override_reason: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'Motivo da liberação para marcação fora da janela',
+    },
     confirmation_code: {
       type: DataTypes.STRING(20),
       allowNull: false,

@@ -6,6 +6,14 @@ const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
+const authRoutes = require('./routes/auth.routes');
+const timeRecordRoutes = require('./routes/timeRecords.routes');
+const workLocationsRoutes = require('./routes/workLocations.routes');
+const workSchedulesRoutes = require('./routes/workSchedules.routes');
+const employeesRoutes = require('./routes/employees.routes');
+const usersRoutes = require('./routes/users.routes');
+const settingsRoutes = require('./routes/settings.routes');
+
 const app = express();
 
 // ===========================
@@ -60,12 +68,13 @@ app.get('/health', (req, res) => {
 // ===========================
 // ROTAS DA API
 // ===========================
-// TODO: Importar e registrar rotas aqui
-// const authRoutes = require('./routes/auth.routes');
-// const userRoutes = require('./routes/user.routes');
-// ...
-// app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/time-records', timeRecordRoutes);
+app.use('/api/work-locations', workLocationsRoutes);
+app.use('/api/work-schedules', workSchedulesRoutes);
+app.use('/api/employees', employeesRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Rota raiz da API
 app.get('/api', (req, res) => {

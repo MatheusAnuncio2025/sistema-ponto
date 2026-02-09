@@ -1,448 +1,297 @@
 # ✅ CHECKLIST DE DESENVOLVIMENTO - SISTEMA DE PONTO ELETRÔNICO
 
 **Data de Início:** 29/01/2026  
-**Última Atualização:** 29/01/2026
+**Última Atualização:** 09/02/2026
 
 ---
 
 ## 🎯 LEGENDA
-- ⏳ **Pendente** - Ainda não iniciado
-- 🔄 **Em Progresso** - Desenvolvimento em andamento
 - ✅ **Concluído** - Finalizado e testado
+- 🔄 **Em Progresso** - Desenvolvimento em andamento
+- ⏳ **Pendente** - Ainda não iniciado
 - ⚠️ **Bloqueado** - Aguardando definição/recurso
 - 🧪 **Em Testes** - Funcionalidade implementada, em fase de testes
 
 ---
 
-## 📋 FASE 1: FUNDAÇÃO DO PROJETO (Semanas 1-2)
+## 📊 PROGRESSO GERAL: 45%
 
-### 1.1 Configuração Inicial
-- ⏳ Estrutura de pastas do projeto
-- ⏳ Configuração do Git e repositório
-- ⏳ Definição de ambiente de desenvolvimento
-- ⏳ Instalação de dependências base
-- ⏳ Configuração de Docker (opcional)
+---
 
-### 1.2 Banco de Dados
-- ⏳ Modelagem do banco de dados
-- ⏳ Criação de tabelas principais:
-  - ⏳ Usuários (users)
-  - ⏳ Funcionários (employees)
-  - ⏳ Registros de ponto (time_records)
-  - ⏳ Escalas (schedules)
-  - ⏳ Jornadas (work_shifts)
-  - ⏳ Locais de trabalho (work_locations)
-  - ⏳ Departamentos (departments)
-  - ⏳ Feriados (holidays)
-  - ⏳ Logs de auditoria (audit_logs)
-  - ⏳ Ajustes de ponto (time_adjustments)
-- ⏳ Definição de relacionamentos
-- ⏳ Criação de índices para performance
-- ⏳ Seeds (dados iniciais para testes)
+## 📋 FASE 1: FUNDAÇÃO DO PROJETO (Semanas 1-2) - 85% COMPLETO
 
-### 1.3 Backend Base
-- ⏳ Configuração do servidor Express
-- ⏳ Estrutura de rotas (routes)
-- ⏳ Estrutura de controllers
-- ⏳ Estrutura de models (Sequelize/TypeORM)
-- ⏳ Middleware de erro
-- ⏳ Middleware de validação
-- ⏳ Configuração de CORS
-- ⏳ Configuração de variáveis de ambiente (.env)
+### 1.1 Configuração Inicial ✅ 100%
+- ✅ Estrutura de pastas do projeto
+- ✅ Configuração do Git e repositório
+- ✅ Definição de ambiente de desenvolvimento (Docker)
+- ✅ Instalação de dependências base
+- ✅ Configuração de Docker Compose
 
-### 1.4 Sistema de Autenticação
-- ⏳ Registro de usuário
-- ⏳ Login com JWT
-- ⏳ Logout
-- ⏳ Recuperação de senha
-- ⏳ Middleware de autenticação
-- ⏳ Sistema de permissões (roles):
-  - ⏳ Funcionário
-  - ⏳ Gestor
-  - ⏳ Administrador
-- ⏳ Proteção de rotas por permissão
+### 1.2 Banco de Dados ✅ 100%
+- ✅ Modelagem do banco de dados
+- ✅ Criação de tabelas principais:
+  - ✅ Usuários (users)
+  - ✅ Funcionários (employees)
+  - ✅ Registros de ponto (time_records)
+  - ✅ Escalas (work_schedules)
+  - ✅ Locais de trabalho (work_locations)
+  - ✅ Feriados (holidays)
+- ✅ Definição de relacionamentos
+- ✅ Criação de índices para performance
+- ✅ Migrations criadas
+- ✅ Seeds (dados iniciais para testes)
 
-### 1.5 Frontend Base
-- ⏳ Configuração do React + TypeScript
-- ⏳ Configuração do Tailwind CSS
-- ⏳ Estrutura de componentes
-- ⏳ Configuração de rotas (React Router)
-- ⏳ Context API para estado global
-- ⏳ Serviço de API (axios)
-- ⏳ Interceptors para autenticação
+### 1.3 Backend Base ✅ 100%
+- ✅ Configuração do servidor Express
+- ✅ Estrutura de rotas (routes)
+- ✅ Estrutura de controllers
+- ✅ Estrutura de models (Sequelize)
+- ✅ Middleware de erro
+- ✅ Middleware de validação
+- ✅ Configuração de CORS
+- ✅ Configuração de variáveis de ambiente (.env)
+- ✅ Health check endpoint (/health)
 
-### 1.6 Telas Iniciais
-- ⏳ Tela de Login
+### 1.4 Sistema de Autenticação Backend ✅ 100%
+- ✅ Model de User com hash de senha
+- ✅ Registro de usuário (POST /api/auth/register)
+- ✅ Login com JWT (POST /api/auth/login)
+- ✅ Middleware de autenticação JWT
+- ✅ Endpoint de perfil (GET /api/auth/me)
+- ✅ Logout (client-side)
+
+### 1.5 Sistema de Autenticação Frontend ✅ 100%
+- ✅ Serviço de API (auth.ts)
+- ✅ Context de Autenticação (AuthContext)
+- ✅ Tela de Login (LoginPage)
+- ✅ Formulário de Login (LoginForm)
+- ✅ Rotas Protegidas (ProtectedRoute)
+- ✅ Dashboard Básico (DashboardPage)
+- ✅ Integração App.tsx com rotas
+- ✅ Instalação no projeto do usuário
+- ✅ Testes manuais de login/rotas/logout
+- ⏳ Testes de integração completos
+
+### 1.6 Telas Iniciais 🔄 60%
+- ✅ Tela de Login
 - ⏳ Tela de Registro (primeiro acesso admin)
 - ⏳ Tela de Recuperação de Senha
-- ⏳ Layout principal (sidebar, header)
-- ⏳ Tela de Dashboard (estrutura básica)
+- 🔄 Layout principal (sidebar, header)
+- ✅ Tela de Dashboard (estrutura básica)
 
 ---
 
-## 📋 FASE 2: FUNCIONALIDADES CORE (Semanas 3-4)
+## 📋 FASE 2: CORE FEATURES (Semanas 3-4) - 35% COMPLETO
 
-### 2.1 Registro de Ponto - Frontend
-- ⏳ Interface de registro de ponto
-- ⏳ Botão grande e intuitivo "REGISTRAR PONTO"
-- ⏳ Exibição de hora atual em tempo real
-- ⏳ Indicador de tipo de marcação (entrada/saída/almoço)
-- ⏳ Tela de confirmação com animação
-- ⏳ Feedback sonoro (bip de sucesso)
-- ⏳ Feedback visual (cor verde, ícone de check)
-- ⏳ Exibição de detalhes do registro:
-  - ⏳ Horário exato
-  - ⏳ Localização capturada
-  - ⏳ Número de confirmação
-  - ⏳ Tipo de marcação
-- ⏳ Histórico de pontos do dia
-- ⏳ Histórico de pontos do mês
+### 2.1 Registro de Ponto 🔄 85%
+- ✅ Tela de registro de ponto
+- ✅ Botão grande e claro para bater ponto
+- ✅ API de registro de ponto (POST /api/time-records)
+- 🧪 Validação de horários
+- ✅ Feedback visual de sucesso
+- ✅ Feedback sonoro de confirmação
+- ✅ Sistema de confirmação com código único
+- ✅ Histórico de pontos do dia
+- ✅ Histórico de pontos do mês
+- 🧪 Histórico de pontos da semana
 
-### 2.2 Registro de Ponto - Backend
-- ⏳ API para registrar ponto (POST /api/time-records)
-- ⏳ Validação de dados
-- ⏳ Captura de timestamp preciso
-- ⏳ Geração de número de confirmação único
-- ⏳ Armazenamento no banco de dados
-- ⏳ Log de auditoria
-- ⏳ Retorno de confirmação detalhada
+### 2.2 Geolocalização 🔄 80%
+- ✅ Captura de geolocalização no frontend
+- ✅ Permissão de localização do navegador
+- ✅ Validação de perímetro (raio permitido)
+- ✅ Armazenamento de coordenadas no banco
+- 🧪 Visualização de localização no histórico
+- ✅ Cadastro de locais de trabalho permitidos
+- ✅ Alerta se fora do perímetro
+- ⏳ Fallback para modo offline
 
-### 2.3 Geolocalização
-- ⏳ Captura de coordenadas GPS no frontend
-- ⏳ Validação de permissão de localização
-- ⏳ Envio de coordenadas com registro
-- ⏳ Backend: Validação de perímetro permitido
-- ⏳ Backend: Cálculo de distância do ponto de trabalho
-- ⏳ Backend: Registro da localização exata
-- ⏳ Configuração de locais de trabalho:
-  - ⏳ Endereço
-  - ⏳ Coordenadas (lat/lng)
-  - ⏳ Raio permitido (metros)
-- ⏳ Frontend: Alerta se estiver fora do perímetro
-- ⏳ Frontend: Mapa visual (opcional)
-- ⏳ Exceção para regime híbrido (flag por usuário)
+### 2.3 Escalas e Jornadas 🔄 55%
+- ✅ Cadastro de escalas (5x2, 6x1, personalizada)
+- 🧪 Atribuição de escala a funcionário
+- ⏳ Configuração de sábados alternados
+- ✅ Configuração de horários por escala
+- ✅ Configuração de horários por dia da semana
+- 🧪 Configuração de almoço por funcionário
+- ⏳ Validação de jornada ao bater ponto
+- ⏳ Cálculo de horas trabalhadas
+- ⏳ Cálculo de horas extras
+- ⏳ Banco de horas
 
-### 2.4 Sistema de Escalas e Jornadas
-- ⏳ CRUD de escalas:
-  - ⏳ Criar escala
-  - ⏳ Editar escala
-  - ⏳ Excluir escala
-  - ⏳ Listar escalas
-- ⏳ Tipos de escala suportados:
-  - ⏳ 5x2 (Segunda a Sexta)
-  - ⏳ 6x1 (Segunda a Sábado)
-  - ⏳ Sábados alternados
-  - ⏳ Personalizada
-- ⏳ Configuração de horários por escala:
-  - ⏳ Hora de entrada
-  - ⏳ Hora de saída para almoço
-  - ⏳ Hora de retorno do almoço
-  - ⏳ Hora de saída
-- ⏳ Vinculação de funcionário à escala
-- ⏳ Calendário de dias úteis vs dias de folga
-- ⏳ Cadastro de feriados (nacional + municipal)
-- ⏳ Tolerância de atraso (minutos)
-
-### 2.5 Cálculo de Horas
-- ⏳ Cálculo automático de:
-  - ⏳ Horas trabalhadas no dia
-  - ⏳ Horas trabalhadas no mês
-  - ⏳ Horas de atraso
-  - ⏳ Horas extras
-  - ⏳ Banco de horas (saldo)
-- ⏳ Aplicação de regras CLT:
-  - ⏳ 50% adicional em dias úteis
-  - ⏳ 100% adicional domingos e feriados
-  - ⏳ Limite de 2h extras por dia
-- ⏳ Armazenamento de cálculos no banco
-- ⏳ API para consulta de horas (GET /api/employees/:id/hours)
-
-### 2.6 Dashboard Administrativo - V1
-- ⏳ Visão geral em tempo real:
-  - ⏳ Funcionários presentes agora
-  - ⏳ Funcionários ausentes
-  - ⏳ Atrasos do dia
-  - ⏳ Esquecimentos de ponto
-- ⏳ Cards com estatísticas principais
-- ⏳ Lista de funcionários com status
-- ⏳ Filtros básicos (departamento, data)
-- ⏳ Gráfico de presença (simples)
+### 2.4 Dashboard Administrativo ⏳ 0%
+- ⏳ Visão geral de funcionários
+- ⏳ Quem bateu ponto hoje
+- ⏳ Quem está atrasado
+- ⏳ Quem não bateu ponto
+- ⏳ Estatísticas do dia/semana/mês
+- ⏳ Gráficos de presença
+- ⏳ Alertas e notificações
 
 ---
 
-## 📋 FASE 3: FEATURES AVANÇADAS (Semanas 5-6)
+## 📋 FASE 3: FEATURES AVANÇADAS (Semanas 5-6) - 0% COMPLETO
 
-### 3.1 Sistema de Notificações - Backend
-- ⏳ Configuração de Web Push API
-- ⏳ Armazenamento de subscription do usuário
-- ⏳ API para registrar subscription
-- ⏳ Sistema de fila para notificações (Bull/Redis)
-- ⏳ Envio de notificações programadas
-- ⏳ Log de notificações enviadas
+### 3.1 Sistema de Notificações ⏳ 0%
+- ⏳ Configuração de lembretes
+- ⏳ Notificações no navegador (Web Push)
+- ⏳ Lembretes personalizados por horário
+- ⏳ Notificação de esquecimento de ponto
+- ⏳ Configuração de preferências de notificação
 
-### 3.2 Sistema de Notificações - Frontend
-- ⏳ Solicitação de permissão para notificações
-- ⏳ Service Worker para receber notificações
-- ⏳ Tela de configuração de lembretes:
-  - ⏳ Ativar/desativar notificações
-  - ⏳ Configurar horários personalizados
-  - ⏳ Antecipar lembrete (5, 10, 15 min)
-- ⏳ Notificações no navegador:
-  - ⏳ Lembrete de entrada
-  - ⏳ Lembrete de saída para almoço
-  - ⏳ Lembrete de retorno do almoço
-  - ⏳ Lembrete de saída
-- ⏳ Alerta de esquecimento (se passou do horário)
+### 3.2 Relatórios e Exportações ⏳ 0%
+- ⏳ Relatório de ponto individual
+- ⏳ Relatório de ponto por departamento
+- ⏳ Relatório de horas extras
+- ⏳ Relatório de banco de horas
+- ⏳ Exportação para Excel
+- ⏳ Exportação para PDF
+- ⏳ Exportação para sistema de folha
 
-### 3.3 Relatórios
-- ⏳ Backend: Geração de relatórios:
-  - ⏳ Ponto individual (por funcionário)
-  - ⏳ Ponto por período
-  - ⏳ Horas extras do mês
-  - ⏳ Banco de horas (todos os funcionários)
-  - ⏳ Faltas e atrasos
-  - ⏳ Relatório de presença
-- ⏳ Backend: Exportação em formatos:
-  - ⏳ Excel (.xlsx)
-  - ⏳ PDF
-  - ⏳ CSV
-- ⏳ Frontend: Interface de relatórios:
-  - ⏳ Seleção de tipo de relatório
-  - ⏳ Filtros (data, funcionário, departamento)
-  - ⏳ Pré-visualização
-  - ⏳ Botão de download
-- ⏳ Templates de relatório profissionais (com logo)
+### 3.3 Sistema de Ajustes ⏳ 0%
+- ⏳ Solicitação de ajuste de ponto
+- ⏳ Aprovação de ajustes (gestor)
+- ⏳ Histórico de ajustes
+- ⏳ Justificativa de ajustes
+- ⏳ Notificação de ajustes pendentes
 
-### 3.4 Modo Offline e Sincronização
-- ⏳ Configuração de Service Worker
-- ⏳ Cache de recursos estáticos (PWA)
-- ⏳ IndexedDB para armazenamento local
-- ⏳ Detecção de status de conexão
-- ⏳ Fila de registros offline:
-  - ⏳ Armazenar registro localmente
-  - ⏳ Indicador visual "aguardando sincronização"
-  - ⏳ Sincronização automática ao reconectar
-- ⏳ Notificação de sincronização bem-sucedida
-- ⏳ Tratamento de conflitos
-
-### 3.5 Sistema de Ajustes e Aprovações
-- ⏳ Funcionário: Solicitar ajuste de ponto:
-  - ⏳ Formulário de solicitação
-  - ⏳ Motivo/justificativa (texto)
-  - ⏳ Upload de anexo (atestado, etc)
-  - ⏳ Seleção de data/hora
-- ⏳ Gestor: Aprovar/rejeitar ajustes:
-  - ⏳ Lista de solicitações pendentes
-  - ⏳ Visualização de detalhes
-  - ⏳ Botões aprovar/rejeitar
-  - ⏳ Campo para observações
-- ⏳ Notificação de aprovação/rejeição
-- ⏳ Log de todas as aprovações
-- ⏳ Histórico de ajustes por funcionário
-
-### 3.6 Dashboard Administrativo - V2 (Completo)
-- ⏳ Gráficos avançados:
-  - ⏳ Gráfico de presença ao longo do tempo
-  - ⏳ Gráfico de horas extras por mês
-  - ⏳ Gráfico de atrasos recorrentes
-  - ⏳ Comparativo de departamentos
-- ⏳ Alertas inteligentes:
-  - ⏳ Atrasos recorrentes (3+ vezes no mês)
-  - ⏳ Esquecimentos frequentes
-  - ⏳ Horas extras acima do limite
-- ⏳ Busca avançada de funcionários
-- ⏳ Ações rápidas (aprovar ajuste, exportar relatório)
+### 3.4 Modo Offline ⏳ 0%
+- ⏳ Service Worker
+- ⏳ Cache de dados essenciais
+- ⏳ Fila de sincronização
+- ⏳ Indicador de status de conexão
+- ⏳ Sincronização automática ao reconectar
 
 ---
 
-## 📋 FASE 4: TESTES E REFINAMENTOS (Semana 7)
+## 📋 FASE 4: TESTES E REFINAMENTOS (Semana 7) - 0% COMPLETO
 
-### 4.1 Testes de Funcionalidade
-- ⏳ Teste de registro de ponto:
-  - ⏳ Registro com sucesso
-  - ⏳ Registro com falha de conexão
-  - ⏳ Registro offline
-  - ⏳ Sincronização posterior
-- ⏳ Teste de geolocalização:
-  - ⏳ Dentro do perímetro
-  - ⏳ Fora do perímetro
-  - ⏳ Sem permissão de localização
-- ⏳ Teste de escalas:
-  - ⏳ 5x2, 6x1, alternada
-  - ⏳ Cálculo de horas
-  - ⏳ Banco de horas
-- ⏳ Teste de notificações
-- ⏳ Teste de relatórios
-- ⏳ Teste de ajustes e aprovações
+### 4.1 Testes Automatizados ⏳ 0%
+- ⏳ Testes unitários backend
+- ⏳ Testes de integração backend
+- ⏳ Testes unitários frontend
+- ⏳ Testes E2E (End-to-End)
 
-### 4.2 Testes de Performance
-- ⏳ Teste de carga:
-  - ⏳ 55 usuários simultâneos
-  - ⏳ 100 usuários simultâneos (margem)
-- ⏳ Teste de latência de registro (<2 segundos)
-- ⏳ Teste de consultas complexas (relatórios)
-- ⏳ Otimização de queries lentas
-- ⏳ Implementação de cache (Redis)
+### 4.2 Testes de Performance ⏳ 0%
+- ⏳ Teste de carga (55+ usuários simultâneos)
+- ⏳ Otimização de queries
+- ⏳ Otimização de bundle frontend
+- ⏳ Teste de velocidade de resposta
 
-### 4.3 Testes de Segurança
-- ⏳ Teste de SQL Injection
-- ⏳ Teste de XSS (Cross-Site Scripting)
-- ⏳ Teste de CSRF (Cross-Site Request Forgery)
-- ⏳ Validação de tokens JWT
-- ⏳ Teste de permissões (acesso não autorizado)
-- ⏳ Auditoria de logs
-- ⏳ Teste de criptografia de senha
+### 4.3 Testes de Segurança ⏳ 0%
+- ⏳ Auditoria de segurança
+- ⏳ Teste de vulnerabilidades
+- ⏳ Validação de autenticação
+- ⏳ Validação de autorização
 
-### 4.4 Testes de Usabilidade (UX)
-- ⏳ Teste com grupo piloto (5-10 funcionários)
-- ⏳ Coleta de feedback sobre interface
-- ⏳ Ajustes de design conforme feedback
-- ⏳ Teste de responsividade:
-  - ⏳ Desktop (Chrome, Firefox, Edge)
-  - ⏳ Mobile (Android Chrome, iOS Safari)
-  - ⏳ Tablet
-- ⏳ Teste de acessibilidade (WCAG)
-
-### 4.5 Correção de Bugs
-- ⏳ Lista de bugs identificados
-- ⏳ Priorização (crítico, alto, médio, baixo)
-- ⏳ Correção de bugs críticos
-- ⏳ Correção de bugs de alta prioridade
-- ⏳ Reteste de bugs corrigidos
-
-### 4.6 Documentação Final
-- ⏳ Documentação técnica:
-  - ⏳ Arquitetura do sistema
-  - ⏳ Documentação de API (Swagger)
-  - ⏳ Diagrama de banco de dados
-  - ⏳ Fluxos de processo
-- ⏳ Manual do administrador (PDF)
-- ⏳ Manual do usuário (PDF)
-- ⏳ Vídeo tutorial (15 minutos)
-- ⏳ FAQ completo
-- ⏳ Guia de troubleshooting
+### 4.4 Ajustes de UX/UI ⏳ 0%
+- ⏳ Testes de usabilidade
+- ⏳ Refinamento de design
+- ⏳ Responsividade mobile
+- ⏳ Acessibilidade
 
 ---
 
-## 📋 FASE 5: DEPLOY E TREINAMENTO (Semana 8)
+## 📋 FASE 5: DEPLOY E LANÇAMENTO (Semana 8) - 0% COMPLETO
 
-### 5.1 Preparação de Infraestrutura
-- ⚠️ Escolha de provedor de hospedagem (aguardando definição)
-- ⏳ Contratação de servidor/cloud
-- ⏳ Configuração de servidor:
-  - ⏳ Sistema operacional (Ubuntu/Debian)
-  - ⏳ Node.js
-  - ⏳ PostgreSQL
-  - ⏳ Redis
-  - ⏳ Nginx
+### 5.1 Preparação para Deploy ⏳ 0%
+- ⏳ Configuração de VPS
 - ⏳ Configuração de domínio
-- ⏳ Configuração de SSL (Let's Encrypt)
+- ⏳ Certificado SSL
 - ⏳ Configuração de backup automático
+- ⏳ Monitoramento e logs
 
-### 5.2 Deploy em Produção
-- ⏳ Deploy do banco de dados:
-  - ⏳ Criação de tabelas
-  - ⏳ Inserção de dados iniciais
-- ⏳ Deploy do backend:
-  - ⏳ Upload de código
-  - ⏳ Instalação de dependências
-  - ⏳ Configuração de variáveis de ambiente
-  - ⏳ Inicialização do servidor
-- ⏳ Deploy do frontend:
-  - ⏳ Build de produção
-  - ⏳ Upload de arquivos estáticos
-  - ⏳ Configuração de domínio
-- ⏳ Teste de funcionamento em produção
+### 5.2 Deploy ⏳ 0%
+- ⏳ Deploy do banco de dados
+- ⏳ Deploy do backend
+- ⏳ Deploy do frontend
+- ⏳ Configuração de variáveis de ambiente produção
+- ⏳ Teste em produção
 
-### 5.3 Migração de Dados (se houver)
-- ⏳ Exportação de dados do sistema antigo
-- ⏳ Limpeza e formatação de dados
-- ⏳ Importação para novo sistema
-- ⏳ Validação de dados importados
-
-### 5.4 Treinamento
-- ⏳ Treinamento de administradores (2 horas):
-  - ⏳ Gerenciamento de funcionários
-  - ⏳ Configuração de escalas
-  - ⏳ Geração de relatórios
-  - ⏳ Aprovação de ajustes
-  - ⏳ Resolução de problemas comuns
-- ⏳ Treinamento de gestores (1 hora):
-  - ⏳ Dashboard de equipe
-  - ⏳ Aprovação de ajustes
-  - ⏳ Relatórios da equipe
-- ⏳ Treinamento de funcionários:
-  - ⏳ Vídeo tutorial (15 min)
-  - ⏳ Manual em PDF
-  - ⏳ Sessão ao vivo (opcional)
-
-### 5.5 Período de Acompanhamento
-- ⏳ Primeira semana: Suporte intensivo
-- ⏳ Segunda semana: Ajustes finos
-- ⏳ Coleta de feedback dos usuários
-- ⏳ Implementação de melhorias urgentes
-- ⏳ Reunião de encerramento com CEOs
-
----
-
-## 🎯 ENTREGAS FINAIS
-
-### Produtos
-- ✅ Documentação do projeto (este documento)
-- ⏳ Sistema web funcional em produção
-- ⏳ Banco de dados populado
-- ⏳ Manual do administrador
-- ⏳ Manual do usuário
+### 5.3 Treinamento ⏳ 0%
+- ⏳ Documentação de usuário
 - ⏳ Vídeo tutorial
-- ⏳ FAQ
-- ⏳ Código-fonte no repositório Git
+- ⏳ Treinamento de administradores
+- ⏳ Treinamento de gestores
+- ⏳ Orientação para funcionários
 
-### Treinamentos
-- ⏳ Administradores treinados
-- ⏳ Gestores treinados
-- ⏳ Funcionários orientados
-
-### Suporte
-- ⏳ 2 semanas de suporte intensivo incluídas
-- ⏳ Canal de comunicação para dúvidas
-- ⏳ Processo de atualização definido
+### 5.4 Lançamento ⏳ 0%
+- ⏳ Migração de dados (se houver)
+- ⏳ Lançamento para grupo piloto
+- ⏳ Coleta de feedback
+- ⏳ Ajustes finais
+- ⏳ Lançamento geral
 
 ---
 
-## 📊 MÉTRICAS DE SUCESSO
+## 🎯 PRÓXIMOS PASSOS IMEDIATOS
 
-### Critérios de Aceitação
-- [ ] 100% dos funcionários conseguem registrar ponto
-- [ ] 0 erros de registro sem feedback
-- [ ] <2 segundos de latência no registro
-- [ ] 95%+ de precisão na geolocalização
-- [ ] Redução de 80%+ em ajustes manuais
-- [ ] Todos os relatórios funcionando corretamente
-- [ ] Sistema aprovado pelos CEOs
+### 1. Finalizar Registro de Ponto
+- [ ] Implementar histórico semanal
+- [ ] Validação de horários de marcação (regras básicas)
+- [ ] Exibição de localização no histórico
+
+### 2. Evoluir Geolocalização
+- [x] Cadastro de locais permitidos (admin)
+- [ ] Visualização de local no histórico
+
+### 3. Iniciar Escalas e Jornadas
+- [ ] Estruturar CRUD de escalas
+- [ ] Vincular funcionário à escala
+- [ ] Regras de horário básicas
 
 ---
 
-**Status Geral do Projeto:** 🔄 EM PLANEJAMENTO  
-**Próxima Atualização:** [Data]
+## 📊 MÉTRICAS DE PROGRESSO
+
+| Fase | Progresso | Status |
+|------|-----------|--------|
+| Fase 1: Fundação | 85% | 🔄 Em Andamento |
+| Fase 2: Core Features | 35% | 🔄 Em Andamento |
+| Fase 3: Features Avançadas | 0% | ⏳ Pendente |
+| Fase 4: Testes | 0% | ⏳ Pendente |
+| Fase 5: Deploy | 0% | ⏳ Pendente |
+| **TOTAL** | **45%** | 🔄 **Em Desenvolvimento** |
 
 ---
 
-## 📝 NOTAS E OBSERVAÇÕES
+## 🎯 MARCOS IMPORTANTES
 
-### Decisões Pendentes
-1. ⚠️ **Hospedagem:** Definir entre servidor próprio, VPS ou cloud
-2. ⚠️ **Migração:** Confirmar se haverá importação de dados do sistema atual
-3. ⚠️ **Logo/Identidade:** Providenciar logo da empresa para relatórios
+- [x] ✅ Projeto iniciado (29/01/2026)
+- [x] ✅ Estrutura base criada (29/01/2026)
+- [x] ✅ Banco de dados modelado (30/01/2026)
+- [x] ✅ Backend autenticação completo (30/01/2026)
+- [x] ✅ Frontend autenticação criado (09/02/2026)
+- [x] ✅ Autenticação validada em ambiente local (09/02/2026)
+- [x] ✅ Registro de ponto funcionando (09/02/2026)
+- [ ] ⏳ Geolocalização implementada (completa)
+- [ ] ⏳ Sistema completo em produção
+- [ ] ⏳ Lançamento oficial
+
+---
+
+## 📝 OBSERVAÇÕES
+
+### Decisões Tomadas
+- ✅ Stack: Node.js + React + PostgreSQL
+- ✅ Hospedagem: VPS
+- ✅ Containerização: Docker
+- ✅ Controle de versão: Git + GitHub
+
+### Pendências
+- ⚠️ Logo da empresa (para relatórios)
+- ⚠️ Nome definitivo do sistema
+- ⚠️ Definição de VPS específica
 
 ### Riscos Identificados
-- Dependência de permissão de geolocalização no navegador
-- Conexão instável pode afetar sincronização
-- Curva de aprendizado dos usuários
+- Geolocalização pode não funcionar em todos navegadores
+- Conexão instável pode afetar registro de ponto
+- Necessidade de treinamento dos usuários
 
 ### Mitigações
-- Modo offline robusto para resolver conexão instável
-- Tutoriais e suporte para facilitar aprendizado
-- Testes extensivos com grupo piloto antes do lançamento geral
+- Modo offline robusto
+- Feedback claro em todas as ações
+- Tutoriais e documentação completa
 
 ---
 
+**Última Atualização:** 09/02/2026 - 15:30  
+**Próxima Revisão:** Após evolução da Fase 2

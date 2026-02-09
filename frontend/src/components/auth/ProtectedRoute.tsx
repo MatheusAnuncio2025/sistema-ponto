@@ -2,11 +2,19 @@
 
 import React from "react";
 import { Navigate } from "react-router-dom";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "admin" | "manager" | "employee";
+  requiredRole?:
+    | "admin"
+    | "hr"
+    | "supervisor"
+    | "coordinator"
+    | "manager"
+    | "employee"
+    | Array<"admin" | "hr" | "supervisor" | "coordinator" | "manager" | "employee">;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -17,12 +25,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
-        </div>
-      </div>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <CircularProgress color="primary" />
+        <Typography variant="body2" color="text.secondary">
+          Carregando...
+        </Typography>
+      </Box>
     );
   }
 
@@ -30,8 +47,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole && user.role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
+  if (requiredRole) {
+    const allowed = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    if (!allowed.includes(user.role) && user.role !== "admin") {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <>{children}</>;
