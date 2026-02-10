@@ -7,6 +7,7 @@ const defaultSettings = {
   allow_supervisor_out_of_schedule: true,
   allow_coordinator_out_of_schedule: true,
   allow_manager_out_of_schedule: false,
+  admin_logo_data: null,
 };
 
 const getOrCreate = async () => {
@@ -34,13 +35,21 @@ const update = async (req, res, next) => {
     }
 
     const settings = await getOrCreate();
-    const payload = {
-      allow_admin_out_of_schedule: req.body.allow_admin_out_of_schedule,
-      allow_hr_out_of_schedule: req.body.allow_hr_out_of_schedule,
-      allow_supervisor_out_of_schedule: req.body.allow_supervisor_out_of_schedule,
-      allow_coordinator_out_of_schedule: req.body.allow_coordinator_out_of_schedule,
-      allow_manager_out_of_schedule: req.body.allow_manager_out_of_schedule,
-    };
+    const payload = {};
+    const fields = [
+      "allow_admin_out_of_schedule",
+      "allow_hr_out_of_schedule",
+      "allow_supervisor_out_of_schedule",
+      "allow_coordinator_out_of_schedule",
+      "allow_manager_out_of_schedule",
+      "admin_logo_data",
+    ];
+
+    fields.forEach((field) => {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        payload[field] = req.body[field];
+      }
+    });
 
     await settings.update(payload);
     return res.json({ success: true, settings });

@@ -10,8 +10,8 @@ router.post(
   authMiddleware,
   [
     body('record_type').notEmpty().withMessage('Tipo de registro é obrigatório'),
-    body('latitude').optional().isNumeric().withMessage('Latitude inválida'),
-    body('longitude').optional().isNumeric().withMessage('Longitude inválida'),
+    body('latitude').optional({ nullable: true }).isNumeric().withMessage('Latitude inválida'),
+    body('longitude').optional({ nullable: true }).isNumeric().withMessage('Longitude inválida'),
   ],
   timeRecordsController.create
 );

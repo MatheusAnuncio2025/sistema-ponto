@@ -108,7 +108,7 @@ const WorkLocationsPage: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: "100%", maxWidth: 1400, mx: "auto" }}>
       <Stack spacing={3}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Box>
@@ -124,13 +124,7 @@ const WorkLocationsPage: React.FC = () => {
           </Button>
         </Stack>
 
-        <Paper
-          sx={{
-            p: 3,
-            border: "1px solid rgba(15,23,42,0.06)",
-            background: "linear-gradient(180deg, #ffffff, rgba(0,149,48,0.02))",
-          }}
-        >
+        <Paper sx={{ p: 3, border: "1px solid rgba(15,23,42,0.06)" }}>
           <Typography variant="h6" fontWeight={600} gutterBottom>
             {editingId ? "Editar Local" : "Novo Local"}
           </Typography>

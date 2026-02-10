@@ -75,6 +75,13 @@ const timeToMinutes = (timeStr) => {
   return parts[0] * 60 + parts[1];
 };
 
+const toMinutesFromDate = (dateValue) => {
+  if (!dateValue) return null;
+  const d = new Date(dateValue);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.getHours() * 60 + d.getMinutes();
+};
+
 const buildScheduleValidation = (schedule, recordType, now, employee) => {
   if (!schedule) {
     return { valid: true, warning: 'Funcionário sem escala definida' };
@@ -156,6 +163,60 @@ const buildScheduleValidation = (schedule, recordType, now, employee) => {
   return { valid: true };
 };
 
+const resolveScheduleForDay = (schedule, day, employee) => {
+  if (!schedule) return null;
+  const dayKey = String(day);
+  const dayRule =
+    schedule.day_rules && typeof schedule.day_rules === 'object'
+      ? schedule.day_rules[dayKey]
+      : null;
+  const baseRule = {
+    start_time: schedule.start_time,
+    lunch_start: schedule.lunch_start,
+    lunch_end: schedule.lunch_end,
+    end_time: schedule.end_time,
+  };
+  const resolved = {
+    ...baseRule,
+    ...(dayRule || {}),
+  };
+  if (employee && employee.lunch_start) {
+    resolved.lunch_start = employee.lunch_start;
+  }
+  if (employee && employee.lunch_end) {
+    resolved.lunch_end = employee.lunch_end;
+  }
+  return resolved;
+};
+
+const calculateExpectedMinutes = (schedule, day, employee) => {
+  const resolved = resolveScheduleForDay(schedule, day, employee);
+  if (!resolved || !resolved.start_time || !resolved.end_time) return null;
+  const start = timeToMinutes(resolved.start_time);
+  const end = timeToMinutes(resolved.end_time);
+  if (start === null || end === null) return null;
+  const lunchStart = resolved.lunch_start ? timeToMinutes(resolved.lunch_start) : null;
+  const lunchEnd = resolved.lunch_end ? timeToMinutes(resolved.lunch_end) : null;
+  const lunch = lunchStart !== null && lunchEnd !== null ? lunchEnd - lunchStart : 0;
+  return Math.max(end - start - lunch, 0);
+};
+
+const calculateWorkedMinutes = (records) => {
+  const entry = records.find((r) => r.record_type === 'entry');
+  const exit = records.find((r) => r.record_type === 'exit');
+  if (!entry || !exit) return null;
+  const start = toMinutesFromDate(entry.timestamp);
+  const end = toMinutesFromDate(exit.timestamp);
+  if (start === null || end === null) return null;
+  const lunchStart = records.find((r) => r.record_type === 'lunch_start');
+  const lunchEnd = records.find((r) => r.record_type === 'lunch_end');
+  const interval =
+    lunchStart && lunchEnd
+      ? Math.max(toMinutesFromDate(lunchEnd.timestamp) - toMinutesFromDate(lunchStart.timestamp), 0)
+      : 0;
+  return Math.max(end - start - interval, 0);
+};
+
 const create = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -229,15 +290,21 @@ const create = async (req, res, next) => {
 
     let isWithinRadius = true;
     let distanceMeters = null;
+    let locationWarning = null;
 
-    if (!employee.is_hybrid && workLocation && lat !== null && lon !== null) {
-      distanceMeters = calculateDistanceMeters(
-        lat,
-        lon,
-        Number(workLocation.latitude),
-        Number(workLocation.longitude)
-      );
-      isWithinRadius = distanceMeters <= Number(workLocation.radius);
+    if (!employee.is_hybrid && workLocation) {
+      if (lat !== null && lon !== null) {
+        distanceMeters = calculateDistanceMeters(
+          lat,
+          lon,
+          Number(workLocation.latitude),
+          Number(workLocation.longitude)
+        );
+        isWithinRadius = distanceMeters <= Number(workLocation.radius);
+      } else {
+        isWithinRadius = false;
+        locationWarning = 'Localizacao nao informada';
+      }
     }
 
     let confirmationCode = generateConfirmationCode();
@@ -269,10 +336,45 @@ const create = async (req, res, next) => {
       },
     });
 
+    if (record_type === 'exit') {
+      const recordDay = new Date(record.timestamp);
+      const startOfDay = new Date(recordDay);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(recordDay);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const dayRecords = await TimeRecord.findAll({
+        where: {
+          employee_id: employee.id,
+          timestamp: {
+            [Op.between]: [startOfDay, endOfDay],
+          },
+        },
+        order: [['timestamp', 'ASC']],
+      });
+
+      const exitCount = dayRecords.filter((r) => r.record_type === 'exit').length;
+      if (exitCount === 1) {
+        const workedMin = calculateWorkedMinutes(dayRecords);
+        const expectedMin = calculateExpectedMinutes(
+          employee.workSchedule,
+          recordDay.getDay(),
+          employee
+        );
+        if (workedMin !== null && expectedMin !== null) {
+          const deltaHours = Number(((workedMin - expectedMin) / 60).toFixed(2));
+          const currentBalance = Number(employee.hours_balance || 0);
+          await employee.update({
+            hours_balance: Number((currentBalance + deltaHours).toFixed(2)),
+          });
+        }
+      }
+    }
+
     return res.status(201).json({
       success: true,
       record,
-      warning: scheduleCheck.warning,
+      warning: [scheduleCheck.warning, locationWarning].filter(Boolean).join(' | ') || undefined,
       scheduleOverride: overrideInfo ? true : false,
       workLocation: workLocation
         ? {

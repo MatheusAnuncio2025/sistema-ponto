@@ -11,15 +11,18 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ViewSidebarIcon from "@mui/icons-material/ViewSidebar";
 import { useTheme } from "@mui/material/styles";
 import AppSidebar from "./AppSidebar";
 
 const drawerWidth = 260;
+const collapsedWidth = 80;
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
@@ -30,36 +33,61 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        background:
-          "radial-gradient(circle at 20% 20%, rgba(0,149,48,0.12), transparent 35%), radial-gradient(circle at 80% 0%, rgba(11,93,42,0.12), transparent 35%), #f5f7f5",
+        background: "#f5f7f5",
       }}
     >
+      <AppBar
+        position="fixed"
+        color="transparent"
+        elevation={0}
+        sx={(theme) => ({
+          zIndex: theme.zIndex.drawer + 1,
+          ml: { xs: 0, md: collapsed ? `${collapsedWidth}px` : `${drawerWidth}px` },
+          width: {
+            xs: "100%",
+            md: `calc(100% - ${collapsed ? collapsedWidth : drawerWidth}px)`,
+          },
+        })}
+      >
+        <Toolbar>
+          {isMobile && (
+            <IconButton onClick={handleDrawerToggle} edge="start" sx={{ mr: 1 }}>
+              <MenuIcon />
+            </IconButton>
+          )}
+          {!isMobile && (
+            <IconButton
+              onClick={() => setCollapsed((prev) => !prev)}
+              edge="start"
+              sx={{ mr: 1 }}
+            >
+              <ViewSidebarIcon />
+            </IconButton>
+          )}
+          <Typography variant="h6" fontWeight={600}>
+            Registro de Ponto
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
       <AppSidebar
         drawerWidth={drawerWidth}
+        collapsedWidth={collapsedWidth}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed((prev) => !prev)}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
         variantMobile={isMobile}
       />
 
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <AppBar position="sticky" color="transparent" elevation={0}>
-          <Toolbar>
-            {isMobile && (
-              <IconButton onClick={handleDrawerToggle} edge="start" sx={{ mr: 1 }}>
-                <MenuIcon />
-              </IconButton>
-            )}
-            <Typography variant="h6" fontWeight={600}>
-              Registro de Ponto
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
-        <Container
-          maxWidth="lg"
+        <Toolbar />
+        <Box
           sx={{
-            py: 4,
+            py: { xs: 3, md: 4 },
+            px: { xs: 2, md: 4 },
             flex: 1,
+            width: "100%",
             animation: "fadeInUp 0.45s ease",
             "@keyframes fadeInUp": {
               from: { opacity: 0, transform: "translateY(8px)" },
@@ -67,8 +95,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
             },
           }}
         >
-          {children}
-        </Container>
+          <Box sx={{ maxWidth: 1400, mx: "auto", width: "100%" }}>
+            {children}
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

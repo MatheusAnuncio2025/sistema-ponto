@@ -1,7 +1,7 @@
-﻿# ✅ CHECKLIST DE DESENVOLVIMENTO - SISTEMA DE PONTO ELETRÔNICO
+# ✅ CHECKLIST DE DESENVOLVIMENTO - SISTEMA DE PONTO ELETRÔNICO
 
 **Data de Início:** 29/01/2026  
-**Última Atualização:** 09/02/2026
+**Última Atualização:** 10/02/2026
 
 ---
 
@@ -14,7 +14,7 @@
 
 ---
 
-## 📊 PROGRESSO GERAL: 60%
+## 📊 PROGRESSO GERAL: 65%
 
 ---
 
@@ -75,12 +75,14 @@
 - ✅ Layout com sidebar e header
 - ✅ Tema principal com verde `rgb(0, 149, 48)`
 - ✅ Refino visual global (hover, sombras, transições)
+- ✅ Sidebar colapsável + menus expansíveis
+- ✅ Layout centralizado e responsivo
 
 ---
 
-## 📋 FASE 2: CORE FEATURES (Semanas 3-4) - 60% COMPLETO
+## 📋 FASE 2: CORE FEATURES (Semanas 3-4) - 70% COMPLETO
 
-### 2.1 Registro de Ponto 🧪 85%
+### 2.1 Registro de Ponto 🧪 90%
 - ✅ Tela de registro de ponto
 - ✅ Botões de marcação (Entrada/Almoço/Retorno/Saída)
 - ✅ API de registro de ponto (POST /api/time-records)
@@ -91,8 +93,10 @@
 - ✅ Sistema de confirmação com código único
 - ✅ Histórico de pontos do dia
 - ✅ Histórico de pontos do mês (30 dias)
+- ✅ Resumo semanal (gráfico)
+- ⏳ Alertas avançados de perímetro
 
-### 2.2 Geolocalização 🧪 70%
+### 2.2 Geolocalização 🧪 75%
 - ✅ Captura de geolocalização no frontend
 - ✅ Permissão de localização do navegador
 - ✅ Validação de perímetro (raio permitido)
@@ -100,6 +104,7 @@
 - ✅ Cadastro de locais de trabalho permitidos
 - ✅ Exibir localização atual + botão atualizar + auto-refresh 30min
 - ✅ Exibir localização da entrada no histórico
+- ⏳ Exibir localização para todas as marcações
 - ⏳ Alertas/UX avançados quando fora do perímetro
 - ⏳ Fallback para modo offline
 
@@ -115,18 +120,19 @@
 - ⏳ Cálculo de horas extras
 - ⏳ Banco de horas
 
-### 2.4 Gestão Administrativa 🧪 60%
+### 2.4 Gestão Administrativa 🧪 70%
 - ✅ Gestão de locais de trabalho
 - ✅ Gestão de escalas
 - ✅ Gestão de usuários e perfis (Admin/RH/Supervisor/Coordenador/Gerente/Colaborador)
 - ✅ Configurações de ponto por perfil
 - ✅ Liberação de ponto fora da janela por colaborador
-- ⏳ Dashboard administrativo (indicadores do dia)
+- ✅ Dashboard administrativo básico (listas e indicadores)
+- ⏳ Filtros por data e exportação
 - ⏳ Alertas de atraso e ausência
 
 ---
 
-## 📋 FASE 3: FEATURES AVANÇADAS (Semanas 5-6) - 10% COMPLETO
+## 📋 FASE 3: FEATURES AVANÇADAS (Semanas 5-6) - 15% COMPLETO
 
 ### 3.1 Sistema de Notificações ⏳ 0%
 - ⏳ Configuração de lembretes
@@ -229,10 +235,8 @@
 - [ ] Exibir localização em todos os tipos de marcação
 
 ### 2. Dashboard Administrativo
-- [ ] Quem bateu ponto hoje
-- [ ] Quem está atrasado
-- [ ] Quem não bateu ponto
-- [ ] Estatísticas do dia/semana/mês
+- [ ] Filtro por data
+- [ ] Exportação de listas (atrasos/ausências)
 
 ### 3. Relatórios Detalhados
 - [ ] Relatórios por funcionário e departamento
@@ -245,11 +249,11 @@
 | Fase | Progresso | Status |
 |------|-----------|--------|
 | Fase 1: Fundação | 100% | ✅ Concluída |
-| Fase 2: Core Features | 60% | 🧪 Em testes |
-| Fase 3: Features Avançadas | 10% | 🔄 Em andamento |
+| Fase 2: Core Features | 70% | 🧪 Em testes |
+| Fase 3: Features Avançadas | 15% | 🔄 Em andamento |
 | Fase 4: Testes | 0% | ⏳ Pendente |
 | Fase 5: Deploy | 0% | ⏳ Pendente |
-| **TOTAL** | **60%** | 🔄 **Em Desenvolvimento** |
+| **TOTAL** | **65%** | 🔄 **Em Desenvolvimento** |
 
 ---
 
@@ -264,7 +268,8 @@
 - [x] ✅ Escalas e locais funcionando (09/02/2026)
 - [x] ✅ Gestão de usuários e perfis (09/02/2026)
 - [x] ✅ Configurações de perfis para ponto (09/02/2026)
-- [ ] ⏳ Dashboard administrativo completo
+- [x] ✅ Refino visual global (10/02/2026)
+- [x] ✅ Dashboard administrativo básico (10/02/2026)
 - [ ] ⏳ Geolocalização com alertas avançados
 - [ ] ⏳ Sistema completo em produção
 - [ ] ⏳ Lançamento oficial
@@ -296,5 +301,5 @@
 
 ---
 
-**Última Atualização:** 09/02/2026 - 20:45  
-**Próxima Revisão:** Após validação dos refinamentos visuais
+**Última Atualização:** 10/02/2026  
+**Próxima Revisão:** Após validação do dashboard administrativo

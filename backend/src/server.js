@@ -1,8 +1,14 @@
 require('dotenv').config();
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 const app = require('./app');
 const { sequelize } = require('./models');
 
 const PORT = process.env.PORT || 5000;
+const HTTPS_ENABLED = String(process.env.HTTPS).toLowerCase() === 'true';
+const SSL_CRT_FILE = process.env.SSL_CRT_FILE;
+const SSL_KEY_FILE = process.env.SSL_KEY_FILE;
 
 // Função para iniciar o servidor
 async function startServer() {
@@ -17,8 +23,19 @@ async function startServer() {
       // console.log('✅ Modelos sincronizados com banco de dados');
     }
 
-    // Iniciar servidor
-    app.listen(PORT, () => {
+    // Iniciar servidor (HTTP/HTTPS)
+    const server = (() => {
+      if (HTTPS_ENABLED && SSL_CRT_FILE && SSL_KEY_FILE) {
+        const cert = fs.readFileSync(SSL_CRT_FILE);
+        const key = fs.readFileSync(SSL_KEY_FILE);
+        return https.createServer({ key, cert }, app);
+      }
+      return http.createServer(app);
+    })();
+
+    server.listen(PORT, () => {
+      const protocol =
+        HTTPS_ENABLED && SSL_CRT_FILE && SSL_KEY_FILE ? 'https' : 'http';
       console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
@@ -26,7 +43,7 @@ async function startServer() {
 ║                                                       ║
 ║   📡  Servidor rodando na porta: ${PORT}                ║
 ║   🌍  Ambiente: ${process.env.NODE_ENV || 'development'}                    ║
-║   📚  Documentação: http://localhost:${PORT}/api-docs     ║
+║   📚  Documentação: ${protocol}://localhost:${PORT}/api-docs     ║
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
       `);

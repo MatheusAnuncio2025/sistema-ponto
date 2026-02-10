@@ -6,6 +6,7 @@ export interface TimePolicySettings {
   allow_supervisor_out_of_schedule: boolean;
   allow_coordinator_out_of_schedule: boolean;
   allow_manager_out_of_schedule: boolean;
+  admin_logo_data?: string | null;
 }
 
 export interface SettingsResponse {
@@ -19,7 +20,7 @@ export const settingsService = {
     return response.data;
   },
 
-  async update(payload: TimePolicySettings): Promise<SettingsResponse> {
+  async update(payload: Partial<TimePolicySettings>): Promise<SettingsResponse> {
     const response = await api.patch<SettingsResponse>("/settings", payload);
     return response.data;
   },

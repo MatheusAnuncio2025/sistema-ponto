@@ -14,14 +14,15 @@ export interface Employee {
   punch_override_until?: string | null;
   punch_override_by?: string | null;
   punch_override_reason?: string | null;
+  hours_balance?: number | null;
+  workSchedule?: WorkSchedule | null;
+  workLocation?: WorkLocation | null;
   user: {
     id: string;
     name: string;
     email: string;
     role: "admin" | "hr" | "supervisor" | "coordinator" | "manager" | "employee";
   };
-  workSchedule?: WorkSchedule | null;
-  workLocation?: WorkLocation | null;
 }
 
 export interface EmployeeListResponse {
@@ -29,9 +30,19 @@ export interface EmployeeListResponse {
   employees: Employee[];
 }
 
+export interface EmployeeMeResponse {
+  success: boolean;
+  employee: Employee;
+}
+
 export const employeesService = {
   async list(): Promise<EmployeeListResponse> {
     const response = await api.get<EmployeeListResponse>("/employees");
+    return response.data;
+  },
+
+  async me(): Promise<EmployeeMeResponse> {
+    const response = await api.get<EmployeeMeResponse>("/employees/me");
     return response.data;
   },
 

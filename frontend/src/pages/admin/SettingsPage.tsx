@@ -10,6 +10,8 @@ import {
 import { settingsService, TimePolicySettings } from "../../services/api/settings";
 import { useNavigate } from "react-router-dom";
 
+type BooleanSettingKey = keyof Omit<TimePolicySettings, "admin_logo_data">;
+
 const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,13 @@ const SettingsPage: React.FC = () => {
     try {
       setLoading(true);
       const resp = await settingsService.get();
-      setForm(resp.settings);
+      setForm({
+        allow_admin_out_of_schedule: resp.settings.allow_admin_out_of_schedule,
+        allow_hr_out_of_schedule: resp.settings.allow_hr_out_of_schedule,
+        allow_supervisor_out_of_schedule: resp.settings.allow_supervisor_out_of_schedule,
+        allow_coordinator_out_of_schedule: resp.settings.allow_coordinator_out_of_schedule,
+        allow_manager_out_of_schedule: resp.settings.allow_manager_out_of_schedule,
+      });
     } catch (err: any) {
       setError(err.message || "Erro ao carregar configurações");
     } finally {
@@ -39,7 +47,7 @@ const SettingsPage: React.FC = () => {
     load();
   }, []);
 
-  const handleToggle = (key: keyof TimePolicySettings) => {
+  const handleToggle = (key: BooleanSettingKey) => {
     setForm((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -55,7 +63,7 @@ const SettingsPage: React.FC = () => {
     }
   };
 
-  const rows: Array<{ key: keyof TimePolicySettings; label: string; desc: string }> = [
+  const rows: Array<{ key: BooleanSettingKey; label: string; desc: string }> = [
     {
       key: "allow_admin_out_of_schedule",
       label: "Administrador",
@@ -84,7 +92,7 @@ const SettingsPage: React.FC = () => {
   ];
 
   return (
-    <Box>
+    <Box sx={{ width: "100%", maxWidth: 1400, mx: "auto" }}>
       <Stack spacing={3}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Box>
@@ -100,13 +108,7 @@ const SettingsPage: React.FC = () => {
           </Button>
         </Stack>
 
-        <Paper
-          sx={{
-            p: 3,
-            border: "1px solid rgba(15,23,42,0.06)",
-            background: "linear-gradient(180deg, #ffffff, rgba(0,149,48,0.02))",
-          }}
-        >
+        <Paper sx={{ p: 3, border: "1px solid rgba(15,23,42,0.06)" }}>
           {error && (
             <Typography variant="body2" color="error" mb={2}>
               {error}
@@ -138,7 +140,7 @@ const SettingsPage: React.FC = () => {
                     </Typography>
                   </Box>
                   <Switch
-                    checked={form[row.key]}
+                    checked={Boolean(form[row.key])}
                     onChange={() => handleToggle(row.key)}
                   />
                 </Paper>

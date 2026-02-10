@@ -47,7 +47,7 @@ const HistoryPage: React.FC = () => {
   }, [records, period]);
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto" }}>
+    <Box sx={{ width: "100%", maxWidth: 1400, mx: "auto" }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h6" fontWeight={600}>
           Histórico de Registros
@@ -70,13 +70,7 @@ const HistoryPage: React.FC = () => {
         </Stack>
       </Stack>
 
-      <Paper
-        sx={{
-          p: 2,
-          border: "1px solid rgba(15,23,42,0.06)",
-          background: "linear-gradient(180deg, #ffffff, rgba(0,149,48,0.02))",
-        }}
-      >
+      <Paper sx={{ p: 2, border: "1px solid rgba(15,23,42,0.06)" }}>
         <TableContainer>
           <Table>
           <TableHead>

@@ -20,6 +20,7 @@ import WorkLocationsPage from "./pages/admin/WorkLocationsPage";
 import WorkSchedulesPage from "./pages/admin/WorkSchedulesPage";
 import UsersPage from "./pages/admin/UsersPage";
 import SettingsPage from "./pages/admin/SettingsPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 
 function App() {
   const PublicRoute = ({ children }: { children: React.ReactNode }) => {
@@ -55,6 +56,14 @@ function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/historico" element={<HistoryPage />} />
             <Route path="/relatorios" element={<ReportsPage />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute requiredRole={["admin", "hr", "supervisor", "coordinator"]}>
+                  <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/admin/work-locations"
               element={

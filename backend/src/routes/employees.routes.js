@@ -6,6 +6,8 @@ const employeesController = require('../controllers/employees.controller');
 
 const router = express.Router();
 
+router.get('/me', authMiddleware, employeesController.getMe);
+
 router.get('/', authMiddleware, requireRole('admin'), employeesController.list);
 
 router.patch(

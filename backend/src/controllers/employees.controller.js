@@ -18,6 +18,27 @@ const list = async (req, res, next) => {
   }
 };
 
+const getMe = async (req, res, next) => {
+  try {
+    const employee = await Employee.findOne({
+      where: { user_id: req.user.id },
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'name', 'email', 'role'] },
+        { model: WorkSchedule, as: 'workSchedule' },
+        { model: WorkLocation, as: 'workLocation' },
+      ],
+    });
+
+    if (!employee) {
+      return res.status(404).json({ success: false, message: 'Funcionário não encontrado' });
+    }
+
+    return res.json({ success: true, employee });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const updateSchedule = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -133,6 +154,7 @@ const clearPunchOverride = async (req, res, next) => {
 
 module.exports = {
   list,
+  getMe,
   updateSchedule,
   updateLunch,
   setPunchOverride,

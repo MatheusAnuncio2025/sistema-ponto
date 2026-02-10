@@ -13,6 +13,8 @@ import {
   Stack,
   Typography,
   Button,
+  Collapse,
+  Tooltip,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HistoryIcon from "@mui/icons-material/History";
@@ -22,6 +24,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PeopleIcon from "@mui/icons-material/People";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -33,11 +37,17 @@ const navItems = [
 
 export default function AppSidebar({
   drawerWidth,
+  collapsedWidth,
+  collapsed,
+  onToggleCollapse,
   mobileOpen,
   onClose,
   variantMobile,
 }: {
   drawerWidth: number;
+  collapsedWidth: number;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
   mobileOpen: boolean;
   onClose: () => void;
   variantMobile: boolean;
@@ -55,20 +65,29 @@ export default function AppSidebar({
         .toUpperCase()
     : "US";
 
+  const [adminOpen, setAdminOpen] = React.useState(true);
+
   const drawerContent = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 2 }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        sx={{ p: 2, justifyContent: collapsed ? "center" : "flex-start" }}
+      >
         <Avatar sx={{ bgcolor: "primary.main", width: 38, height: 38 }}>
           {initials}
         </Avatar>
-        <Box sx={{ minWidth: 0 }}>
-          <Typography variant="body2" fontWeight={600} noWrap>
-            {user?.name}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" noWrap>
-            {user?.role}
-          </Typography>
-        </Box>
+        {!collapsed && (
+          <Box sx={{ minWidth: 0 }}>
+            <Typography variant="body2" fontWeight={600} noWrap>
+              {user?.name}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" noWrap>
+              {user?.role}
+            </Typography>
+          </Box>
+        )}
       </Stack>
 
       <Divider />
@@ -78,7 +97,7 @@ export default function AppSidebar({
           const selected =
             location.pathname === item.path ||
             (item.path !== "/" && location.pathname.startsWith(item.path));
-          return (
+          const button = (
             <ListItemButton
               key={item.path}
               selected={selected}
@@ -108,8 +127,15 @@ export default function AppSidebar({
                   <BarChartIcon color={selected ? "primary" : "inherit"} />
                 )}
               </ListItemIcon>
-              <ListItemText primary={item.label} />
+              {!collapsed && <ListItemText primary={item.label} />}
             </ListItemButton>
+          );
+          return collapsed ? (
+            <Tooltip key={item.path} title={item.label} placement="right">
+              {button}
+            </Tooltip>
+          ) : (
+            button
           );
         })}
       </List>
@@ -119,6 +145,52 @@ export default function AppSidebar({
         <>
           <Divider />
           <List sx={{ px: 1, py: 1 }}>
+            <ListItemButton
+              onClick={() => setAdminOpen((prev) => !prev)}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                transition: "all 0.18s ease",
+                "&:hover": { backgroundColor: "rgba(15,23,42,0.04)" },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <SettingsIcon />
+              </ListItemIcon>
+              {!collapsed && (
+                <>
+                  <ListItemText primary="Administração" />
+                  {adminOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </>
+              )}
+            </ListItemButton>
+          </List>
+          <Collapse in={adminOpen || collapsed} timeout="auto" unmountOnExit>
+            <List sx={{ px: 1, py: 1 }}>
+            <ListItemButton
+              onClick={() => {
+                navigate("/admin/dashboard");
+                if (variantMobile) onClose();
+              }}
+              selected={location.pathname.startsWith("/admin/dashboard")}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                transition: "all 0.18s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(15,23,42,0.04)",
+                },
+                "&.Mui-selected": {
+                  backgroundColor: "rgba(0,149,48,0.12)",
+                  color: "primary.main",
+                },
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <DashboardIcon />
+              </ListItemIcon>
+              {!collapsed && <ListItemText primary="Dashboard Admin" />}
+            </ListItemButton>
             <ListItemButton
               onClick={() => {
                 navigate("/admin/work-locations");
@@ -141,7 +213,7 @@ export default function AppSidebar({
               <ListItemIcon sx={{ minWidth: 36 }}>
                 <LocationOnIcon />
               </ListItemIcon>
-              <ListItemText primary="Locais Permitidos" />
+              {!collapsed && <ListItemText primary="Locais Permitidos" />}
             </ListItemButton>
             <ListItemButton
               onClick={() => {
@@ -165,7 +237,7 @@ export default function AppSidebar({
               <ListItemIcon sx={{ minWidth: 36 }}>
                 <CalendarMonthIcon />
               </ListItemIcon>
-              <ListItemText primary="Escalas" />
+              {!collapsed && <ListItemText primary="Escalas" />}
             </ListItemButton>
             <ListItemButton
               onClick={() => {
@@ -189,7 +261,7 @@ export default function AppSidebar({
               <ListItemIcon sx={{ minWidth: 36 }}>
                 <PeopleIcon />
               </ListItemIcon>
-              <ListItemText primary="Usuários" />
+              {!collapsed && <ListItemText primary="Usuários" />}
             </ListItemButton>
             <ListItemButton
               onClick={() => {
@@ -213,9 +285,10 @@ export default function AppSidebar({
               <ListItemIcon sx={{ minWidth: 36 }}>
                 <SettingsIcon />
               </ListItemIcon>
-              <ListItemText primary="Configurações" />
+              {!collapsed && <ListItemText primary="Configurações" />}
             </ListItemButton>
           </List>
+          </Collapse>
         </>
       )}
 
@@ -225,9 +298,12 @@ export default function AppSidebar({
           color="inherit"
           startIcon={<LogoutIcon />}
           onClick={logout}
-          sx={{ justifyContent: "flex-start", width: "100%" }}
+          sx={{
+            justifyContent: collapsed ? "center" : "flex-start",
+            width: "100%",
+          }}
         >
-          Sair
+          {!collapsed && "Sair"}
         </Button>
       </Box>
     </Box>
@@ -239,10 +315,10 @@ export default function AppSidebar({
       open={variantMobile ? mobileOpen : true}
       onClose={onClose}
       sx={{
-        width: drawerWidth,
+        width: collapsed ? collapsedWidth : drawerWidth,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: collapsed ? collapsedWidth : drawerWidth,
           boxSizing: "border-box",
         },
       }}

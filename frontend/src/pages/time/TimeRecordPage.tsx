@@ -19,6 +19,7 @@ import {
   timeRecordService,
   TimeRecord,
   RecordType,
+  TimeRecordResponse,
 } from "../../services/api/timeRecords";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -83,6 +84,16 @@ const formatDateTime = (value: string) =>
     timeStyle: "medium",
   }).format(new Date(value));
 
+const buildPerimeterWarning = (response: TimeRecordResponse | null) => {
+  if (!response || !response.record) return null;
+  if (response.record.is_within_radius !== false) return null;
+  const distance = response.record.distance_meters ?? null;
+  const radius = response.workLocation?.radius ?? null;
+  const distanceLabel = distance !== null ? `${Math.round(distance)}m` : "distância desconhecida";
+  const radiusLabel = radius !== null ? `${Math.round(radius)}m` : "raio não informado";
+  return `Fora do perímetro permitido: ${distanceLabel} (raio ${radiusLabel}).`;
+};
+
 const TimeRecordPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -96,6 +107,7 @@ const TimeRecordPage: React.FC = () => {
   const [success, setSuccess] = useState<TimeRecord | null>(null);
   const [locationWarning, setLocationWarning] = useState<string | null>(null);
   const [scheduleWarning, setScheduleWarning] = useState<string | null>(null);
+  const [perimeterWarning, setPerimeterWarning] = useState<string | null>(null);
 
   const nextRecordType = useMemo(
     () => getNextRecordType(recordsToday),
@@ -148,6 +160,7 @@ const TimeRecordPage: React.FC = () => {
     setSuccess(null);
     setLocationWarning(null);
     setScheduleWarning(null);
+    setPerimeterWarning(null);
     setLoading(true);
 
     try {
@@ -167,6 +180,10 @@ const TimeRecordPage: React.FC = () => {
       setSuccess(response.record);
       if (response.warning) {
         setScheduleWarning(response.warning);
+      }
+      const perimeterAlert = buildPerimeterWarning(response);
+      if (perimeterAlert) {
+        setPerimeterWarning(perimeterAlert);
       }
       playSuccessBeep();
       await loadRecords();
@@ -225,10 +242,13 @@ const TimeRecordPage: React.FC = () => {
               </Button>
             </Stack>
 
-            {(locationWarning || error) && (
+            {(locationWarning || error || perimeterWarning) && (
               <Stack spacing={1} mt={3}>
                 {locationWarning && (
                   <Chip label={locationWarning} color="warning" variant="outlined" />
+                )}
+                {perimeterWarning && (
+                  <Chip label={perimeterWarning} color="warning" variant="outlined" />
                 )}
                 {error && <Chip label={error} color="error" variant="outlined" />}
               </Stack>
@@ -260,7 +280,7 @@ const TimeRecordPage: React.FC = () => {
                     {success.distance_meters !== null &&
                       success.distance_meters !== undefined && (
                         <Typography variant="body2" color="text.secondary">
-                          Distância do local: {success.distance_meters}m
+                          Distância do local: {Math.round(success.distance_meters)}m
                         </Typography>
                       )}
                     {!success.is_within_radius && (
@@ -319,9 +339,16 @@ const TimeRecordPage: React.FC = () => {
                           <Chip label="Fora do perímetro" size="small" color="warning" />
                         )}
                       </Stack>
-                      <Typography variant="caption" color="text.secondary">
-                        {formatDateTime(record.timestamp)}
-                      </Typography>
+                      <Stack alignItems="flex-end" spacing={0.25}>
+                        <Typography variant="caption" color="text.secondary">
+                          {formatDateTime(record.timestamp)}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {record.latitude != null && record.longitude != null
+                            ? `Lat ${record.latitude.toFixed(5)} · Lng ${record.longitude.toFixed(5)}`
+                            : "Sem GPS"}
+                        </Typography>
+                      </Stack>
                     </Stack>
                   ))}
                 </Stack>

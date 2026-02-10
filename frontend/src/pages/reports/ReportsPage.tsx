@@ -79,15 +79,8 @@ const ReportsPage: React.FC = () => {
   }, [monthRecords]);
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto" }}>
-      <Paper
-        sx={{
-          p: 3,
-          mb: 3,
-          background:
-            "linear-gradient(135deg, rgba(0,149,48,0.12), rgba(11,93,42,0.04))",
-        }}
-      >
+    <Box sx={{ width: "100%", maxWidth: 1400, mx: "auto" }}>
+      <Paper sx={{ p: 3, mb: 3 }}>
         <Typography variant="h6" fontWeight={600}>
           Relatório — {format(new Date(), "MMMM yyyy", { locale: ptBR })}
         </Typography>
@@ -97,7 +90,7 @@ const ReportsPage: React.FC = () => {
       </Paper>
 
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={3}>
-        <Paper sx={{ p: 2, flex: 1, background: "linear-gradient(135deg, rgba(0,149,48,0.08), #ffffff)" }}>
+        <Paper sx={{ p: 2, flex: 1 }}>
           <Stack direction="row" spacing={2} alignItems="center">
             <Box
               sx={{
@@ -120,7 +113,7 @@ const ReportsPage: React.FC = () => {
             </Box>
           </Stack>
         </Paper>
-        <Paper sx={{ p: 2, flex: 1, background: "linear-gradient(135deg, rgba(0,149,48,0.06), #ffffff)" }}>
+        <Paper sx={{ p: 2, flex: 1 }}>
           <Stack direction="row" spacing={2} alignItems="center">
             <Box
               sx={{
@@ -143,7 +136,7 @@ const ReportsPage: React.FC = () => {
             </Box>
           </Stack>
         </Paper>
-        <Paper sx={{ p: 2, flex: 1, background: "linear-gradient(135deg, rgba(0,149,48,0.08), #ffffff)" }}>
+        <Paper sx={{ p: 2, flex: 1 }}>
           <Stack direction="row" spacing={2} alignItems="center">
             <Box
               sx={{
@@ -174,7 +167,6 @@ const ReportsPage: React.FC = () => {
           mb: 3,
           textAlign: "center",
           border: "1px solid rgba(15,23,42,0.06)",
-          background: "linear-gradient(180deg, #ffffff, rgba(0,149,48,0.02))",
         }}
       >
         <Typography variant="body2" color="text.secondary">

@@ -14,11 +14,12 @@ router.patch(
   authMiddleware,
   requireRole(adminRoles),
   [
-    body('allow_admin_out_of_schedule').isBoolean(),
-    body('allow_hr_out_of_schedule').isBoolean(),
-    body('allow_supervisor_out_of_schedule').isBoolean(),
-    body('allow_coordinator_out_of_schedule').isBoolean(),
-    body('allow_manager_out_of_schedule').isBoolean(),
+    body('allow_admin_out_of_schedule').optional().isBoolean(),
+    body('allow_hr_out_of_schedule').optional().isBoolean(),
+    body('allow_supervisor_out_of_schedule').optional().isBoolean(),
+    body('allow_coordinator_out_of_schedule').optional().isBoolean(),
+    body('allow_manager_out_of_schedule').optional().isBoolean(),
+    body('admin_logo_data').optional().isString(),
   ],
   settingsController.update
 );

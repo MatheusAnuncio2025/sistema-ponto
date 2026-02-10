@@ -38,7 +38,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backdropFilter: "blur(12px)",
-          backgroundColor: "rgba(245, 247, 245, 0.78)",
+          backgroundColor: "#f5f7f5",
           borderBottom: "1px solid rgba(15,23,42,0.08)",
         },
       },
@@ -47,8 +47,7 @@ const theme = createTheme({
       styleOverrides: {
         paper: {
           borderRight: "1px solid rgba(15,23,42,0.08)",
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,251,248,0.96))",
+          background: "#ffffff",
         },
       },
     },

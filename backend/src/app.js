@@ -13,6 +13,7 @@ const workSchedulesRoutes = require('./routes/workSchedules.routes');
 const employeesRoutes = require('./routes/employees.routes');
 const usersRoutes = require('./routes/users.routes');
 const settingsRoutes = require('./routes/settings.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
@@ -22,8 +23,20 @@ const app = express();
 app.use(helmet());
 
 // CORS
+const rawOrigins = process.env.CORS_ORIGIN || 'http://localhost:3000';
+const originList = rawOrigins
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const allowAnyOrigin = originList.includes('*');
+
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowAnyOrigin) return callback(null, true);
+    if (originList.includes(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -75,6 +88,7 @@ app.use('/api/work-schedules', workSchedulesRoutes);
 app.use('/api/employees', employeesRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Rota raiz da API
 app.get('/api', (req, res) => {

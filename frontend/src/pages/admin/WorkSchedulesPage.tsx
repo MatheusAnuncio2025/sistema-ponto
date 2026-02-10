@@ -315,7 +315,7 @@ const WorkSchedulesPage: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ width: "100%", maxWidth: 1400, mx: "auto" }}>
       <Stack spacing={3}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Box>
